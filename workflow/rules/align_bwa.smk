@@ -2,6 +2,7 @@ rule align:
     input:
         r1='fastq/{sample}_R1.fastq.gz',
         r2='fastq/{sample}_R2.fastq.gz',
+        ref=config['ref']
     output:
         'results/aligned/{sample}.bam'
     log:
@@ -15,5 +16,5 @@ rule align:
         runtime=cluster['align']['runtime'],
     shell:
         '''
-        bwa mem -p -t {threads} {config[ref]} {input} | samtools view -bS - > {output}
+        bwa mem -p -t {threads} {input.ref} {input} | samtools view -bS - > {output}
         '''
