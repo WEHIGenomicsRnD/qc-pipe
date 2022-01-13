@@ -1,0 +1,23 @@
+# config file for Fastq Screen
+FastqScreen_config: config/fastq_screen.conf
+
+# if set to false, will process from fastq files
+process_from_bcl: False
+
+# sample sheet for bcl2fastq conversion
+sample_sheet: bcl_input/SampleSheet.csv
+
+# directory with raw bcl data
+bcl_input: bcl_input
+
+# number of sequencing lanes (only for bcl input)
+lanes: 4
+
+params:
+    # extra commandline parameters for bcl2fastq (optional)
+    bcl2fastq: >
+        --mask-short-adapter-reads 22
+         --minimum-trimmed-read-length 35
+         --loading-theads 4
+         --writing-threads 4
+         --processing-theads 14
