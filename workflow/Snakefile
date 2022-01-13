@@ -12,11 +12,26 @@ report: 'report/workflow.rst'
 
 include: 'rules/common.smk'
 include: 'rules/qc.smk'
+include: 'rules/align_bwa.smk'
+
+if process_from_bcl:
+    include: 'rules/demultiplex.smk'
 
 #------------- workflow ------------
 
-rule all:
-    input:
-        get_fastqc_output(),
-        get_fastqscreen_output(),
-        'results/multiqc/multiqc_report.html',
+if process_from_bcl:
+    rule all:
+        input:
+            get_bcl2fastq_output(),
+            get_mergelanes_output(),
+            get_fastqc_output(),
+            get_fastqscreen_output(),
+            'results/qc_metrics/multiqc_report.html',
+
+else:
+    rule all:
+        input:
+            get_fastqc_output(),
+            get_fastqscreen_output(),
+            'results/multiqc/multiqc_report.html',
+            get_align_output()

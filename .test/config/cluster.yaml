@@ -22,3 +22,8 @@ multiqc:
     threads: 1
     mem_mb: 65536
     runtime: '0-12:0:0'
+
+align:
+    threads: 16
+    mem_mb: 36864
+    runtime: '0-12:0:0'

@@ -22,3 +22,9 @@ mv *gz ../fastq
 # conda activate bowtie
 
 bowtie2-build ${refname}.fna $refname 
+
+# build bwa index for alignment
+# conda deactivate
+# conda create -n bwa -c conda-forge -c bioconda bwa=0.7.17
+# conda activate bwa
+bwa index ${refname}.fna

@@ -21,3 +21,6 @@ params:
          --loading-theads 4
          --writing-threads 4
          --processing-theads 14
+
+# fasta reference
+ref: data/GCF_013166975.1_ASM1316697v1_genomic.fna

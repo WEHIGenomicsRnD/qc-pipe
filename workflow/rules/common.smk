@@ -71,3 +71,10 @@ def get_fastqscreen_output():
          sample=samples
     )
     return fastqscreen_output
+
+def get_align_output():
+    align_output = expand(
+        'results/aligned/{sample}.bam',
+         sample=samples
+    )
+    return align_output
