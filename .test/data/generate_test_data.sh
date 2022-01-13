@@ -13,6 +13,9 @@ art_illumina -ss HS25 -i ${refname}.fna -p -l 150 -f 2 -m 200 -s 10 -na -rs 1642
 # change extension to fastq.gz
 for fq in `ls *gz`; do sample=${fq%.fq.gz}; mv $fq ${sample}.fastq.gz ; done
 
+mkdir -p ../fastq
+mv *gz ../fastq
+
 # build bowtie2 index for fastq screen
 # conda deactivate
 # conda create -n bowtie -c conda-forge -c bioconda bowtie2=2.4.4
