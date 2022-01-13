@@ -1,3 +1,5 @@
+![CI](https://github.com/WEHIGenomicsRnD/qc-pipe/actions/workflows/main.yml/badge.svg)
+
 # QC-pipe
 
 A [snakemake](https://snakemake.readthedocs.io) pipeline for generating QC metrics from sequencing data.
@@ -21,6 +23,15 @@ Now clone the repository:
 ```
 git clone https://github.com/WEHIGenomicsRnD/qc-pipe.git
 cd qc-pipe
+```
+
+### Testing ###
+
+You can test the pipeline via:
+
+```
+conda activate snakemake
+snakemake --use-conda --conda-frontend mamba --cores 1 --directory .test
 ```
 
 ### Configuration ###
