@@ -19,4 +19,4 @@ rule all:
     input:
         get_fastqc_output(),
         get_fastqscreen_output(),
-        'results/qc_metrics/multiqc_report.html',
+        'results/multiqc/multiqc_report.html',

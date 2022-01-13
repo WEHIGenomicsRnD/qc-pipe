@@ -62,7 +62,7 @@ rule multiQC:
             sample=samples
         ),
     output:
-        'results/qc_metrics/multiqc_report.html'
+        'results/multiqc/multiqc_report.html'
     log:
         'logs/multiQC.log'
     conda:
@@ -75,5 +75,5 @@ rule multiQC:
     shell:
         '''
         multiqc results/fastQC/ results/fastqScreen/ \
-            -o results/qc_metrics -f
+            -o results/multiqc -f
         '''
