@@ -27,3 +27,13 @@ align:
     threads: 16
     mem_mb: 36864
     runtime: '0-12:0:0'
+
+samtools_stats:
+    threads: 1
+    mem_mb: 8192
+    runtime: '0-5:0:0'
+
+qualimap:
+    threads: 8
+    mem_mb: 8192
+    runtime: '0-5:0:0'

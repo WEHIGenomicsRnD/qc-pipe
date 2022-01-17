@@ -43,15 +43,60 @@ rule fastqScreen:
         """
 
 
+rule samtools_stats:
+    input:
+        "results/aligned/{sample}.bam",
+    output:
+        stats="results/samtools/stats/{sample}.txt",
+        flagstat="results/samtools/flagstat/{sample}.txt",
+    log:
+        "logs/samtools_stats_{sample}.log",
+    conda:
+        "../envs/bwa_samtools.yaml"
+    threads: cluster["samtools_stats"]["threads"]
+    resources:
+        mem_mb=cluster["samtools_stats"]["mem_mb"],
+        runtime=cluster["samtools_stats"]["runtime"],
+    shell:
+        """
+        samtools stats {input} > {output.stats}
+        samtools flagstat {input} > {output.flagstat}
+        """
+
+
+rule qualimap:
+    input:
+        "results/aligned/{sample}.bam",
+    output:
+        "results/qualimap/{sample}/qualimapReport.html",
+    log:
+        "logs/qualimap_{sample}.log",
+    conda:
+        "../envs/qualimap.yaml"
+    threads: cluster["qualimap"]["threads"]
+    resources:
+        mem_mb=cluster["qualimap"]["mem_mb"],
+        runtime=cluster["qualimap"]["runtime"],
+    shell:
+        """
+        qualimap bamqc \
+            --java-mem-size={resources.mem_mb}M \
+            -bam {input} \
+            -outdir results/qualimap/{wildcards.sample} \
+            -outformat HTML \
+            -nt {threads}
+        """
+
+
 rule multiQC:
     input:
-        fastqc_r1=expand("results/fastQC/{sample}_R1_fastqc.html", sample=samples),
-        fastqc_r2=expand("results/fastQC/{sample}_R2_fastqc.html", sample=samples),
-        fastqscreen_r1=expand(
+        fastqc=expand("results/fastQC/{sample}_R1_fastqc.html", sample=samples),
+        fastqscreen=expand(
             "results/fastqScreen/{sample}_R1_screen.html", sample=samples
         ),
-        fastqscreen_r2=expand(
-            "results/fastqScreen/{sample}_R2_screen.html", sample=samples
+        samtools=expand("results/samtools/stats/{sample}.txt", sample=samples),
+        qualimap=expand(
+            "results/qualimap/{sample}/qualimapReport.html", sample=samples
         ),
     output:
         "results/multiqc/multiqc_report.html",
@@ -65,6 +110,9 @@ rule multiQC:
         runtime=cluster["multiqc"]["runtime"],
     shell:
         """
-        multiqc results/fastQC/ results/fastqScreen/ \
+        multiqc results/fastQC/ \
+            results/fastqScreen/ \
+            results/qualimap/ \
+            results/samtools/ \
             -o results/multiqc -f
         """

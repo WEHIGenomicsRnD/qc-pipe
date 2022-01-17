@@ -15,5 +15,6 @@ rule align:
         runtime=cluster["align"]["runtime"],
     shell:
         """
-        bwa mem -t {threads} {input.ref} {input.r1} {input.r2} | samtools view -bS - > {output}
+        bwa mem -t {threads} {input.ref} {input.r1} {input.r2} |
+            samtools sort -@ {threads} --write-index -O BAM -o {output} -
         """
