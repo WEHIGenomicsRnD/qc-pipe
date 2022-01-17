@@ -95,9 +95,7 @@ rule multiQC:
             "results/fastqScreen/{sample}_R1_screen.html", sample=samples
         ),
         samtools=expand("results/samtools/stats/{sample}.txt", sample=samples),
-        qualimap=expand(
-            "results/qualimap/{sample}/qualimapReport.html", sample=samples
-        ),
+        qualimap=expand("results/qualimap/{sample}/qualimapReport.html", sample=samples),
     output:
         "results/multiqc/multiqc_report.html",
     log:
