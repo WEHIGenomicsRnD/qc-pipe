@@ -28,3 +28,14 @@ bowtie2-build ${refname}.fna $refname
 # conda create -n bwa -c conda-forge -c bioconda bwa=0.7.17
 # conda activate bwa
 bwa index ${refname}.fna
+
+#wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/013/166/975/GCF_013166975.1_ASM1316697v1/GCF_013166975.1_ASM1316697v1_genomic.gff.gz && gunzip GCF_013166975.1_ASM1316697v1_genomic.gff.gz
+
+# build star index for alignment
+# conda deactivate
+# conda create -n star -c conda-forge -c bioconda star=2.7.8a
+# conda activate star
+STAR --runMode genomeGenerate \
+     --genomeDir star_index \
+     --genomeFastaFiles ${refname}.fna \
+     --genomeSAindexNbases 10

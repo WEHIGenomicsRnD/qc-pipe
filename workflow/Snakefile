@@ -16,7 +16,21 @@ report: "report/workflow.rst"
 
 include: "rules/common.smk"
 include: "rules/qc.smk"
-include: "rules/align_bwa.smk"
+
+
+if config["aligner"].lower() == "bwa":
+
+    include: "rules/align_bwa.smk"
+
+
+elif config["aligner"].lower() == "star":
+
+    include: "rules/align_star.smk"
+
+
+else:
+
+    sys.exit("Invalid aligner selecter")
 
 
 if process_from_bcl:

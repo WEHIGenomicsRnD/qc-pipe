@@ -21,6 +21,18 @@ params:
          --loading-theads 4
          --writing-threads 4
          --processing-theads 14
+    
+    # extra commandline parameters for STAR (optional)
+    star:
 
-# fasta reference
+# bwa or star
+aligner: bwa
+
+# fasta reference if running BWA (must also include BWA index)
 ref: data/GCF_013166975.1_ASM1316697v1_genomic.fna
+
+# only required if running STAR aligner
+star_index: data/star_index
+
+# only required if running STAR aligner
+gtf: data/GCF_013166975.1_ASM1316697v1_genomic.gff
