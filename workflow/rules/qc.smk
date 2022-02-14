@@ -108,9 +108,14 @@ rule multiQC:
         runtime=cluster["multiqc"]["runtime"],
     shell:
         """
-        multiqc results/fastQC/ \
-            results/fastqScreen/ \
-            results/qualimap/ \
-            results/samtools/ \
-            -o results/multiqc -f
+        dirs="results/fastQC/ \
+              results/fastqScreen/ \
+              results/qualimap/ \
+              results/samtools/"
+
+        if [ -d results/bcl_output ]; then
+            dirs="results/bcl_output $dirs"
+        fi
+
+        multiqc $dirs -o results/multiqc -f
         """
