@@ -40,7 +40,7 @@ The configuration file is found under `config/config.yaml` and the config file f
 
 ### Running ###
 
-Place your fastq files in format of `{sample}_R[1|2].fastq.gz` under the a directory called `fastq` in the root directory of the pipeline. Now run the pipeline as follows:
+Place your fastq files in format of `{sample}_R[1|2].fastq.gz` under the the directory specific in your `config.yaml` file (`fastq` by default). Now run the pipeline as follows:
 
 ```
 conda activate snakemake

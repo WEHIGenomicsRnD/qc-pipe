@@ -1,6 +1,3 @@
-# config file for Fastq Screen
-FastqScreen_config: config/fastq_screen.conf
-
 # if set to false, will process from fastq files
 process_from_bcl: False
 
@@ -12,6 +9,12 @@ bcl_input: bcl_input
 
 # number of sequencing lanes (only for bcl input)
 lanes: 4
+
+# directory containing fastq files
+fastq_dir: fastq
+
+# config file for Fastq Screen
+FastqScreen_config: config/fastq_screen.conf
 
 params:
     # extra commandline parameters for bcl2fastq (optional)

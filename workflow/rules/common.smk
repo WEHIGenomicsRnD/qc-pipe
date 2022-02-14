@@ -32,7 +32,8 @@ if process_from_bcl:
 
 else:
     # in this case, we expect the fastq files to already exist
-    fqs = iglob("fastq/*_R1.fastq.gz")
+    fastq_dir = config["fastq_dir"]
+    fqs = iglob(f"{fastq_dir}/*_R1.fastq.gz")
 
     # extract basename of full file path
     base = [os.path.basename(i) for i in fqs]
