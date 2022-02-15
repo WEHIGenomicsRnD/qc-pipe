@@ -33,7 +33,7 @@ else:
     sys.exit("Invalid aligner selecter")
 
 
-if process_from_bcl:
+if process_from_bcl or merge_without_demux:
 
     include: "rules/demultiplex.smk"
 
@@ -41,15 +41,14 @@ if process_from_bcl:
 # ------------- workflow ------------
 
 
-if process_from_bcl:
+if process_from_bcl or merge_without_demux:
 
     rule all:
         input:
-            get_bcl2fastq_output(),
             get_mergelanes_output(),
             get_fastqc_output(),
             get_fastqscreen_output(),
-            "results/qc_metrics/multiqc_report.html",
+            "results/multiqc/multiqc_report.html",
 
 
 else:

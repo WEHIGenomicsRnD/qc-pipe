@@ -47,6 +47,10 @@ conda activate snakemake
 snakemake --use-conda --conda-frontend mamba --cores 1
 ```
 
+If you need to demultiplex your reads via bcl2fastq, you can run this through the pipeline by setting `process_from_bcl: True` in the config file and specifying the input BCL directory (`bcl_input` in the config file).
+
+Alternatively, you may also start with demultiplexed output and have the pipeline perform the merge step (in order to merge lanes). This is also handy if your file names are in the standard BCL output format. To do this, set the `merge_from_dir` parameter in the config file.
+
 If you want to submit your jobs to the cluster using SLURM, use the following to run the pipeline:
 
 ```

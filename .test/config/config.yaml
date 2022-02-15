@@ -10,6 +10,12 @@ bcl_input: bcl_input
 # number of sequencing lanes (only for bcl input)
 lanes: 4
 
+# Directory to start merge step from.
+# Only set this if demultplexing has been done
+# externally to the pipeline (leave blank otherwise)
+# (a valid sheet is required to use this option)
+merge_from_dir:
+
 # directory containing fastq files
 fastq_dir: fastq
 

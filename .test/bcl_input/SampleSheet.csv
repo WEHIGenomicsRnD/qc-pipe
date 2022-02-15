@@ -1,0 +1,6 @@
+[Header],,,
+FileFormatVersion,1,,
+,,,
+[Data],,,
+lane,Sample_ID,Sample_Name,Index
+1,A,Sample,ATATATAT

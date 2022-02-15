@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import yaml
+import itertools
 from glob import iglob
 
 
@@ -17,7 +18,12 @@ READENDS = ["R1", "R2"]
 # ------------- set up samples ------------
 process_from_bcl = bool(config["process_from_bcl"])
 
-if process_from_bcl:
+bcl_dir = config["merge_from_dir"]
+merge_without_demux = bcl_dir != "" and bcl_dir is not None
+
+bcl_dir = bcl_dir if merge_without_demux else "results/bcl_output"
+
+if process_from_bcl or merge_without_demux:
     # process sample sheet for bcl2fastq
     from sample_sheet import SampleSheet
 
