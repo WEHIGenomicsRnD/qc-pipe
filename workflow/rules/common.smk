@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import yaml
 import itertools
+import re
 from glob import iglob
 
 
@@ -20,10 +21,13 @@ process_from_bcl = bool(config["process_from_bcl"])
 
 bcl_dir = config["merge_from_dir"]
 merge_without_demux = bcl_dir != "" and bcl_dir is not None
-
 bcl_dir = bcl_dir if merge_without_demux else "results/bcl_output"
 
-if process_from_bcl or merge_without_demux:
+lanes = config["lanes"]
+if lanes:
+    lanes = ["L%s" % str(lane).zfill(3) for lane in range(1, int(lanes) + 1)]
+
+if process_from_bcl:
     # process sample sheet for bcl2fastq
     from sample_sheet import SampleSheet
 
@@ -33,8 +37,18 @@ if process_from_bcl or merge_without_demux:
         for idx, s in enumerate(sample_sheet.samples)
     ]
 
-    lanes = int(config["lanes"])
-    lanes = ["L%s" % str(lane).zfill(3) for lane in range(1, lanes + 1)]
+elif merge_without_demux:
+    # in this case, demultiplexed fastqs exist, but are not merged
+    fastq_dir = config["merge_from_dir"]
+    fqs = iglob(f"{fastq_dir}/*_R1_001.fastq.gz")
+
+    # extract basename of full file path
+    base = [os.path.basename(i) for i in fqs]
+
+    # extract sample name
+    samples = []
+    for f in base:
+        samples.append(re.split("_L[0-9]{3}", f)[0])
 
 else:
     # in this case, we expect the fastq files to already exist
@@ -50,14 +64,6 @@ else:
         samples.append(f.split("_R1")[0])
 
 # ------------- output functions ------------
-def get_bcl2fastq_output():
-    bcl2fastq_output = expand(
-        "results/bcl_output/{sample}_{lane}_{readend}_001.fastq.gz",
-        sample=samples,
-        lane=lanes,
-        readend=READENDS,
-    )
-    return bcl2fastq_output
 
 
 def get_mergelanes_output():
