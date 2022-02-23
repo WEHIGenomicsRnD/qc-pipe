@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 import yaml
-import itertools
 import re
 from glob import iglob
 
@@ -17,25 +16,56 @@ with open("config/cluster.yaml", "r") as stream:
 READENDS = ["R1", "R2"]
 
 # ------------- set up samples ------------
-process_from_bcl = bool(config["process_from_bcl"])
+demultiplex = bool(config["demultiplex"])
+demux_tool = config["demux_tool"].lower() if config["demux_tool"] else None
 
-bcl_dir = config["merge_from_dir"]
-merge_without_demux = bcl_dir != "" and bcl_dir is not None
-bcl_dir = bcl_dir if merge_without_demux else "results/bcl_output"
+demux_dir = config["merge_from_dir"]
+merge_without_demux = demux_dir != "" and demux_dir is not None
+demux_dir = demux_dir if merge_without_demux else "results/demultiplexed"
 
 lanes = config["lanes"]
 if lanes:
     lanes = ["L%s" % str(lane).zfill(3) for lane in range(1, int(lanes) + 1)]
 
-if process_from_bcl:
-    # process sample sheet for bcl2fastq
-    from sample_sheet import SampleSheet
+if demultiplex:
 
-    sample_sheet = SampleSheet(config["sample_sheet"])
-    samples = [
-        "%s_S%d" % (s.sample_name, idx + 1)
-        for idx, s in enumerate(sample_sheet.samples)
-    ]
+    if demux_tool == "bcl2fastq":
+        # process sample sheet for bcl2fastq
+        from sample_sheet import SampleSheet
+
+        sample_sheet = SampleSheet(config["sample_sheet"])
+        samples = [
+            "%s_S%d" % (s.sample_name, idx + 1)
+            for idx, s in enumerate(sample_sheet.samples)
+        ]
+    elif demux_tool == "mgi_splitbarcode":
+
+        raw_input = config["raw_input"]
+        fqs = iglob(f"{raw_input}/*/*_1.fq.gz")
+
+        # extract basename of full file path
+        sample_prefix = [os.path.basename(i) for i in fqs]
+        sample_prefix = re.split("_L[0-9]{2}", sample_prefix[0])[0]
+
+        # infer lanes
+        lanes = iglob(f"{raw_input}/*")
+        lanes = [os.path.basename(lane) for lane in lanes]
+
+        # make sure this includes only lane names
+        assert all([bool(re.match("L[0-9]{2}", lane)) for lane in lanes])
+
+        # construct sample names from base name + barcodes file
+        barcodes = pd.read_csv(
+            config["params"]["mgi"]["bc_file"], sep="\t", header=None, dtype="str"
+        )
+        sample_ids = barcodes[0].values
+        samples = [f"{sample_prefix}_{sample_id}" for sample_id in sample_ids]
+
+    else:
+        print(
+            f"ERROR: invalid demultiplexing tool specified: {demux_tool}",
+            file=sys.stderr,
+        )
 
 elif merge_without_demux:
     # in this case, demultiplexed fastqs exist, but are not merged
@@ -63,7 +93,21 @@ else:
     for f in base:
         samples.append(f.split("_R1")[0])
 
-# ------------- output functions ------------
+
+# ------------- input/output functions ------------
+
+
+def get_splitbarcodes_output():
+    splitbarcodes_output = (
+        expand(
+            "results/demultiplexed/{lane}/{sample_prefix}_{lane}_{sample_id}_{readend}.fq.gz",
+            lane=lanes,
+            sample_prefix=sample_prefix,
+            sample_id=sample_ids,
+            readend=[1, 2],
+        ),
+    )
+    return splitbarcodes_output
 
 
 def get_mergelanes_output():

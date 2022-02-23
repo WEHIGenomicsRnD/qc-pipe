@@ -33,7 +33,7 @@ else:
     sys.exit("Invalid aligner selecter")
 
 
-if process_from_bcl or merge_without_demux:
+if demultiplex or merge_without_demux:
 
     include: "rules/demultiplex.smk"
 
@@ -41,14 +41,27 @@ if process_from_bcl or merge_without_demux:
 # ------------- workflow ------------
 
 
-if process_from_bcl or merge_without_demux:
+if demultiplex or merge_without_demux:
 
-    rule all:
-        input:
-            get_mergelanes_output(),
-            get_fastqc_output(),
-            get_fastqscreen_output(),
-            "results/multiqc/multiqc_report.html",
+    if demux_tool == "mgi_splitbarcode":
+
+        rule all:
+            input:
+                get_splitbarcodes_output(),
+                get_mergelanes_output(),
+                get_fastqc_output(),
+                get_fastqscreen_output(),
+                "results/multiqc/multiqc_report.html",
+
+
+    else:
+
+        rule all:
+            input:
+                get_mergelanes_output(),
+                get_fastqc_output(),
+                get_fastqscreen_output(),
+                "results/multiqc/multiqc_report.html",
 
 
 else:

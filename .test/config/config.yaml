@@ -1,11 +1,15 @@
 # if set to false, will process from fastq files
-process_from_bcl: False
+demultiplex: False
+
+# demultiplexing software (only relevant if above is true)
+# valid choices are: bcl2fastq and mgi_splitbarcode
+demux_tool: bcl2fastq
 
 # sample sheet for bcl2fastq conversion
-sample_sheet: bcl_input/SampleSheet.csv
+sample_sheet: raw_input/SampleSheet.csv
 
-# directory with raw bcl data
-bcl_input: bcl_input
+# directory with raw non-demultiplexed data
+raw_input: raw_input
 
 # number of sequencing lanes (only for bcl input)
 lanes: 4
@@ -33,6 +37,19 @@ params:
     
     # extra commandline parameters for STAR (optional)
     star:
+
+    # parameters for MGI demultiplexing
+    mgi:
+        # MGI splitBarcode binary
+        binary:
+        # barcode file path
+        bc_file:
+        # split params for barcode 1: read len, barcode len, number of mismatches
+        bs1: "300 10 1"
+        # split params for barcode 2: read len, barcode len, number of mismatches
+        bs2: "310 10 1"
+        # extra parameters (-r = reverse complement barcode)
+        extra: -r -m 64
 
 # bwa or star
 aligner: bwa
