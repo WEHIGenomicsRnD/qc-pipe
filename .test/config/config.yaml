@@ -51,7 +51,7 @@ params:
         # extra parameters (-r = reverse complement barcode)
         extra: -r -m 64
 
-# bwa or star
+# bwa or star (leave blank to skip alignment-based QC)
 aligner: bwa
 
 # fasta reference if running BWA (must also include BWA index)

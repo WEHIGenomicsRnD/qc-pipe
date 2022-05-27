@@ -18,19 +18,14 @@ include: "rules/common.smk"
 include: "rules/qc.smk"
 
 
-if config["aligner"].lower() == "bwa":
+if aligner == "bwa":
 
     include: "rules/align_bwa.smk"
 
 
-elif config["aligner"].lower() == "star":
+elif aligner == "star":
 
     include: "rules/align_star.smk"
-
-
-else:
-
-    sys.exit("Invalid aligner selecter")
 
 
 if demultiplex or merge_without_demux:

@@ -43,79 +43,112 @@ rule fastqScreen:
         """
 
 
-rule samtools_stats:
-    input:
-        "results/aligned/{sample}.bam",
-    output:
-        stats="results/samtools/stats/{sample}.txt",
-        flagstat="results/samtools/flagstat/{sample}.txt",
-    log:
-        "logs/samtools_stats_{sample}.log",
-    conda:
-        "../envs/bwa_samtools.yaml"
-    threads: cluster["samtools_stats"]["threads"]
-    resources:
-        mem_mb=cluster["samtools_stats"]["mem_mb"],
-        runtime=cluster["samtools_stats"]["runtime"],
-    shell:
-        """
-        samtools stats {input} > {output.stats}
-        samtools flagstat {input} > {output.flagstat}
-        """
+if aligner != "none":
+
+    rule samtools_stats:
+        input:
+            "results/aligned/{sample}.bam",
+        output:
+            stats="results/samtools/stats/{sample}.txt",
+            flagstat="results/samtools/flagstat/{sample}.txt",
+        log:
+            "logs/samtools_stats_{sample}.log",
+        conda:
+            "../envs/bwa_samtools.yaml"
+        threads: cluster["samtools_stats"]["threads"]
+        resources:
+            mem_mb=cluster["samtools_stats"]["mem_mb"],
+            runtime=cluster["samtools_stats"]["runtime"],
+        shell:
+            """
+            samtools stats {input} > {output.stats}
+            samtools flagstat {input} > {output.flagstat}
+            """
+
+    rule qualimap:
+        input:
+            "results/aligned/{sample}.bam",
+        output:
+            "results/qualimap/{sample}/qualimapReport.html",
+        log:
+            "logs/qualimap_{sample}.log",
+        conda:
+            "../envs/qualimap.yaml"
+        threads: cluster["qualimap"]["threads"]
+        resources:
+            mem_mb=cluster["qualimap"]["mem_mb"],
+            runtime=cluster["qualimap"]["runtime"],
+        shell:
+            """
+            qualimap bamqc \
+                --java-mem-size={resources.mem_mb}M \
+                -bam {input} \
+                -outdir results/qualimap/{wildcards.sample} \
+                -outformat HTML \
+                -nt {threads}
+            """
+
+    rule multiQC:
+        input:
+            fastqc=expand("results/fastQC/{sample}_R1_fastqc.html", sample=samples),
+            fastqscreen=expand(
+                "results/fastqScreen/{sample}_R1_screen.html", sample=samples
+            ),
+            samtools=expand("results/samtools/stats/{sample}.txt", sample=samples),
+            qualimap=expand(
+                "results/qualimap/{sample}/qualimapReport.html", sample=samples
+            ),
+        output:
+            "results/multiqc/multiqc_report.html",
+        log:
+            "logs/multiQC.log",
+        conda:
+            "../envs/multiqc.yaml"
+        threads: cluster["multiqc"]["threads"]
+        resources:
+            mem_mb=cluster["multiqc"]["mem_mb"],
+            runtime=cluster["multiqc"]["runtime"],
+        shell:
+            """
+            dirs="results/fastQC/ \
+                  results/fastqScreen/ \
+                  results/qualimap/ \
+                  results/samtools/"
+
+            if [ -d results/bcl_output ]; then
+                dirs="results/bcl_output $dirs"
+            fi
+
+            multiqc $dirs -o results/multiqc -f
+            """
 
 
-rule qualimap:
-    input:
-        "results/aligned/{sample}.bam",
-    output:
-        "results/qualimap/{sample}/qualimapReport.html",
-    log:
-        "logs/qualimap_{sample}.log",
-    conda:
-        "../envs/qualimap.yaml"
-    threads: cluster["qualimap"]["threads"]
-    resources:
-        mem_mb=cluster["qualimap"]["mem_mb"],
-        runtime=cluster["qualimap"]["runtime"],
-    shell:
-        """
-        qualimap bamqc \
-            --java-mem-size={resources.mem_mb}M \
-            -bam {input} \
-            -outdir results/qualimap/{wildcards.sample} \
-            -outformat HTML \
-            -nt {threads}
-        """
+else:
 
+    rule multiQC:
+        input:
+            fastqc=expand("results/fastQC/{sample}_R1_fastqc.html", sample=samples),
+            fastqscreen=expand(
+                "results/fastqScreen/{sample}_R1_screen.html", sample=samples
+            ),
+        output:
+            "results/multiqc/multiqc_report.html",
+        log:
+            "logs/multiQC.log",
+        conda:
+            "../envs/multiqc.yaml"
+        threads: cluster["multiqc"]["threads"]
+        resources:
+            mem_mb=cluster["multiqc"]["mem_mb"],
+            runtime=cluster["multiqc"]["runtime"],
+        shell:
+            """
+            dirs="results/fastQC/ \
+                  results/fastqScreen/"
 
-rule multiQC:
-    input:
-        fastqc=expand("results/fastQC/{sample}_R1_fastqc.html", sample=samples),
-        fastqscreen=expand(
-            "results/fastqScreen/{sample}_R1_screen.html", sample=samples
-        ),
-        samtools=expand("results/samtools/stats/{sample}.txt", sample=samples),
-        qualimap=expand("results/qualimap/{sample}/qualimapReport.html", sample=samples),
-    output:
-        "results/multiqc/multiqc_report.html",
-    log:
-        "logs/multiQC.log",
-    conda:
-        "../envs/multiqc.yaml"
-    threads: cluster["multiqc"]["threads"]
-    resources:
-        mem_mb=cluster["multiqc"]["mem_mb"],
-        runtime=cluster["multiqc"]["runtime"],
-    shell:
-        """
-        dirs="results/fastQC/ \
-              results/fastqScreen/ \
-              results/qualimap/ \
-              results/samtools/"
+            if [ -d results/bcl_output ]; then
+                dirs="results/bcl_output $dirs"
+            fi
 
-        if [ -d results/bcl_output ]; then
-            dirs="results/bcl_output $dirs"
-        fi
-
-        multiqc $dirs -o results/multiqc -f
-        """
+            multiqc $dirs -o results/multiqc -f
+            """

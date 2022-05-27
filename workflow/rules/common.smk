@@ -16,6 +16,7 @@ with open("config/cluster.yaml", "r") as stream:
 READENDS = ["R1", "R2"]
 
 # ------------- set up samples ------------
+aligner = str(config["aligner"]).lower()
 demultiplex = bool(config["demultiplex"])
 demux_tool = config["demux_tool"].lower() if config["demux_tool"] else None
 
