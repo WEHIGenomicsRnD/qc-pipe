@@ -2,7 +2,7 @@
 demultiplex: False
 
 # demultiplexing software (only relevant if above is true)
-# valid choices are: bcl2fastq and mgi_splitbarcode
+# valid choices are: bcl2fastq, bcl-convert and mgi_splitbarcode
 demux_tool: bcl2fastq
 
 # sample sheet for bcl2fastq conversion

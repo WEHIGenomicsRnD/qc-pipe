@@ -34,12 +34,12 @@ if demultiplex:
 
         rule splitbarcodes:
             input:
-                fq1="{raw_input}/{lane}/{sample_prefix}_{lane}_read_1.fq.gz".format(
+                fq1="{raw_input}/{lane}/{sample_prefix}{lane}_read_1.fq.gz".format(
                     raw_input=config["raw_input"],
                     lane="{lane}",
                     sample_prefix="{sample_prefix}",
                 ),
-                fq2="{raw_input}/{lane}/{sample_prefix}_{lane}_read_2.fq.gz".format(
+                fq2="{raw_input}/{lane}/{sample_prefix}{lane}_read_2.fq.gz".format(
                     raw_input=config["raw_input"],
                     lane="{lane}",
                     sample_prefix="{sample_prefix}",
@@ -78,7 +78,37 @@ if demultiplex:
                 """
 
 
-if demux_tool == "bcl2fastq":
+    elif demux_tool == "bcl-convert":
+
+        rule bcl2fastq:
+            input:
+                samplesheet=config["sample_sheet"],
+            output:
+                fastq=expand(
+                    "results/bcl_output/{sample}_{lane}_{readend}_001.fastq.gz",
+                    sample=samples,
+                    lane=lanes,
+                    readend=READENDS,
+                ),
+            log:
+                "logs/bclconvert.log",
+            envmodules:
+                "bcl-convert/3.9.3",
+            threads: cluster["bcl2fastq"]["threads"]
+            resources:
+                mem_mb=cluster["bcl2fastq"]["mem_mb"],
+                runtime=cluster["bcl2fastq"]["runtime"],
+            shell:
+                """
+                bcl-convert \
+                    --bcl-input-directory {config[raw_input]} \
+                    --output-directory results/demultiplexed \
+                    --sample-sheet {input} \
+                    --force
+                """
+
+
+if demux_tool in ["bcl2fastq", "bcl-convert"]:
 
     rule mergelanes:
         input:

@@ -47,9 +47,9 @@ conda activate snakemake
 snakemake --use-conda --conda-frontend mamba --cores 1
 ```
 
-If you need to demultiplex your reads via bcl2fastq, you can run this through the pipeline by setting `process_from_bcl: True` in the config file and specifying the input BCL directory (`bcl_input` in the config file).
+If you need to demultiplex your reads via bcl2fastq, bcl-convert or MGI's splitbarcode, you can run this through the pipeline by setting `process_from_bcl: True` in the config file and specifying the input BCL/fastq directory (`raw_input` in the config file). Note that due to the licensing of these demultiplexing tools, you will have to source the software from the Illumina website, or if you are using MGI, directly from MGI support.
 
-Alternatively, you may also start with demultiplexed output and have the pipeline perform the merge step (in order to merge lanes). This is also handy if your file names are in the standard BCL output format. To do this, set the `merge_from_dir` parameter in the config file.
+You may also start the pipeline with already demultiplexed output. In this case, the pipeline can perform the merge step (in order to merge lanes). This is also handy if your file names are in the standard Illumina BCL output format. To do this, set the `merge_from_dir` parameter in the config file.
 
 If you want to submit your jobs to the cluster using SLURM, use the following to run the pipeline:
 

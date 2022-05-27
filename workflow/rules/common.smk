@@ -39,6 +39,34 @@ if demultiplex:
             "%s_S%d" % (s.sample_name, idx + 1)
             for idx, s in enumerate(sample_sheet.samples)
         ]
+
+    elif demux_tool == "bcl-convert":
+        # we have to parse this by hand because bcl-convert uses
+        # v2 sample sheets, which the python module does not support
+        sample_info = []
+        with open(config["sample_sheet"], "r") as ss:
+            found_sample_info = False
+            lines = ss.readlines()
+            sample_info_idx = np.where(np.array(lines) == "[BCLConvert_Data]\n")[0]
+
+            if len(sample_info_idx) == 0:
+                print(
+                    "Could not find [BCLConvert_Data] for demultiplexing. Check your sample sheet.",
+                    file=sys.stderr,
+                )
+                sys.exit()
+
+            for line in lines[sample_info_idx[0] + 1 :]:
+                if line == "\n":
+                    break
+                sample_info.append(line.rstrip())
+
+            sample_info = [s.split(",") for s in sample_info]
+            sample_info = pd.DataFrame(sample_info[1:], columns=sample_info[0])
+            samples = [
+                "%s_S%d" % (s, idx + 1) for idx, s in enumerate(sample_info.Sample_ID)
+            ]
+
     elif demux_tool == "mgi_splitbarcode":
 
         raw_input = config["raw_input"]
