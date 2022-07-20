@@ -85,7 +85,7 @@ if demultiplex:
                 samplesheet=config["sample_sheet"],
             output:
                 fastq=expand(
-                    "results/bcl_output/{sample}_{lane}_{readend}_001.fastq.gz",
+                    "results/demultiplexed/{sample}_{lane}_{readend}_001.fastq.gz",
                     sample=samples,
                     lane=lanes,
                     readend=READENDS,
