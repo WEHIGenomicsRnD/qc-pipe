@@ -68,7 +68,7 @@ if demultiplex:
                 "%s_S%d" % (s, idx + 1) for idx, s in enumerate(sample_info.Sample_ID)
             ]
 
-             # make lane variable empty if there are no lanes
+            # make lane variable empty if there are no lanes
             cols = [col.lower() for col in sample_info.columns]
             if "lane" not in cols:
                 lanes = [""]
