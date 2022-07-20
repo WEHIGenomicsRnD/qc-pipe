@@ -85,7 +85,7 @@ if demultiplex:
                 samplesheet=config["sample_sheet"],
             output:
                 fastq=expand(
-                    "results/demultiplexed/{sample}_{lane}_{readend}_001.fastq.gz",
+                    "results/demultiplexed/{sample}{lane}_{readend}_001.fastq.gz",
                     sample=samples,
                     lane=lanes,
                     readend=READENDS,
@@ -113,7 +113,7 @@ if demux_tool in ["bcl2fastq", "bcl-convert"]:
     rule mergelanes:
         input:
             fastqs=expand(
-                "{demux_dir}/{sample}_{lane}_{readend}_001.fastq.gz",
+                "{demux_dir}/{sample}{lane}_{readend}_001.fastq.gz",
                 demux_dir=demux_dir,
                 sample=samples,
                 lane=lanes,
@@ -130,7 +130,7 @@ if demux_tool in ["bcl2fastq", "bcl-convert"]:
         params:
             demux_dir=demux_dir,
         shell:
-            "cat {params.demux_dir}/{wildcards.sample}_*_{wildcards.readend}_001.fastq.gz > {output}"
+            "cat {params.demux_dir}/{wildcards.sample}*_{wildcards.readend}_001.fastq.gz > {output}"
 
 
 elif demux_tool == "mgi_splitbarcode":

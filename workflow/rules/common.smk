@@ -68,6 +68,14 @@ if demultiplex:
                 "%s_S%d" % (s, idx + 1) for idx, s in enumerate(sample_info.Sample_ID)
             ]
 
+             # make lane variable empty if there are no lanes
+            cols = [col.lower() for col in sample_info.columns]
+            if "lane" not in cols:
+                lanes = [""]
+            else:
+                lanes = int(config["lanes"])
+                lanes = ["_L%s" % str(lane).zfill(3) for lane in range(1, lanes + 1)]
+
     elif demux_tool == "mgi_splitbarcode":
 
         raw_input = config["raw_input"]
@@ -130,7 +138,7 @@ else:
 def get_splitbarcodes_output():
     splitbarcodes_output = (
         expand(
-            "results/demultiplexed/{lane}/{sample_prefix}_{lane}_{sample_id}_{readend}.fq.gz",
+            "results/demultiplexed/{lane}/{sample_prefix}{lane}_{sample_id}_{readend}.fq.gz",
             lane=lanes,
             sample_prefix=sample_prefix,
             sample_id=sample_ids,
