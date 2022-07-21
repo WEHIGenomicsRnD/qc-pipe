@@ -26,6 +26,9 @@ fastq_dir: fastq
 # config file for Fastq Screen
 FastqScreen_config: config/fastq_screen.conf
 
+# config file for MultiQC
+multiqc_config: config/multiqc_config.yaml
+
 params:
     # extra commandline parameters for bcl2fastq (optional)
     bcl2fastq: >

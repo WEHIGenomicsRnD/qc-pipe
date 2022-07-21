@@ -98,6 +98,7 @@ if aligner != "none":
             qualimap=expand(
                 "results/qualimap/{sample}/qualimapReport.html", sample=samples
             ),
+            config_file=config["multiqc_config"],
         output:
             "results/multiqc/multiqc_report.html",
         log:
@@ -119,7 +120,10 @@ if aligner != "none":
                 dirs="results/bcl_output $dirs"
             fi
 
-            multiqc $dirs -o results/multiqc -f
+            multiqc \
+                --config {input.config_file} \
+                $dirs \
+                -o results/multiqc -f
             """
 
 
@@ -131,6 +135,7 @@ else:
             fastqscreen=expand(
                 "results/fastqScreen/{sample}_R1_screen.html", sample=samples
             ),
+            config_file=config["multiqc_config"],
         output:
             "results/multiqc/multiqc_report.html",
         log:
@@ -150,5 +155,8 @@ else:
                 dirs="results/bcl_output $dirs"
             fi
 
-            multiqc $dirs -o results/multiqc -f
+            multiqc \
+                --config {input.config_file} \
+                $dirs \
+                -o results/multiqc -f
             """
