@@ -93,7 +93,7 @@ if demultiplex:
             log:
                 "logs/bclconvert.log",
             envmodules:
-                "bcl-convert/3.9.3",
+                "bcl-convert/3.10.5",
             threads: cluster["bcl2fastq"]["threads"]
             resources:
                 mem_mb=cluster["bcl2fastq"]["mem_mb"],
