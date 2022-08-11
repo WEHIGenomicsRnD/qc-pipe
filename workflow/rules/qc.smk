@@ -116,8 +116,8 @@ if aligner != "none":
                   results/qualimap/ \
                   results/samtools/"
 
-            if [ -d results/bcl_output ]; then
-                dirs="results/bcl_output $dirs"
+            if [ -d results/demultiplexed ]; then
+                dirs="results/demultiplexed $dirs"
             fi
 
             multiqc \
@@ -151,8 +151,8 @@ else:
             dirs="results/fastQC/ \
                   results/fastqScreen/"
 
-            if [ -d results/bcl_output ]; then
-                dirs="results/bcl_output $dirs"
+            if [ -d results/demultiplexed ]; then
+                dirs="results/demultiplexed $dirs"
             fi
 
             multiqc \
