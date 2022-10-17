@@ -28,6 +28,7 @@ demux_dir = demux_dir if merge_without_demux else "results/demultiplexed"
 lanes = config["lanes"]
 if lanes:
     lanes = ["L%s" % str(lane).zfill(3) for lane in range(1, int(lanes) + 1)]
+lane_prefix = ""  # comes before lane in file name
 
 if demultiplex:
 
@@ -88,6 +89,7 @@ if demultiplex:
         # infer lanes
         lanes = iglob(f"{raw_input}/*")
         lanes = [os.path.basename(lane) for lane in lanes]
+        lane_prefix = "_"  # comes before lane in file name
 
         # make sure this includes only lane names
         assert all([bool(re.match("L[0-9]{2}", lane)) for lane in lanes])
@@ -98,7 +100,6 @@ if demultiplex:
         )
         sample_ids = barcodes[0].values
         samples = [f"{sample_prefix}_{sample_id}" for sample_id in sample_ids]
-
     else:
         print(
             f"ERROR: invalid demultiplexing tool specified: {demux_tool}",
@@ -138,9 +139,10 @@ else:
 def get_splitbarcodes_output():
     splitbarcodes_output = (
         expand(
-            "results/demultiplexed/{lane}/{sample_prefix}{lane}_{sample_id}_{readend}.fq.gz",
+            "results/demultiplexed/{lane}/{sample_prefix}{lane_prefix}{lane}_{sample_id}_{readend}.fq.gz",
             lane=lanes,
             sample_prefix=sample_prefix,
+            lane_prefix=lane_prefix,
             sample_id=sample_ids,
             readend=[1, 2],
         ),
