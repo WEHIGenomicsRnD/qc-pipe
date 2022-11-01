@@ -66,4 +66,3 @@ else:
             get_fastqc_output(),
             get_fastqscreen_output(),
             "results/multiqc/multiqc_report.html",
-            get_align_output(),

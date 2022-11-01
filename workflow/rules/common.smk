@@ -171,8 +171,3 @@ def get_fastqscreen_output():
         "results/fastqScreen/{sample}_R2_screen.html", sample=samples
     )
     return fastqscreen_output
-
-
-def get_align_output():
-    align_output = expand("results/aligned/{sample}.bam", sample=samples)
-    return align_output
