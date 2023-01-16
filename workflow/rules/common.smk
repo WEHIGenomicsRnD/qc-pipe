@@ -89,7 +89,6 @@ if demultiplex:
         # infer lanes
         lanes = iglob(f"{raw_input}/*")
         lanes = [os.path.basename(lane) for lane in lanes]
-        lane_prefix = "_"  # comes before lane in file name
 
         # make sure this includes only lane names
         assert all([bool(re.match("L[0-9]{2}", lane)) for lane in lanes])
@@ -118,6 +117,7 @@ elif merge_without_demux:
     samples = []
     for f in base:
         samples.append(re.split("_L[0-9]{3}", f)[0])
+    lane_prefix = "_"
 
 else:
     # in this case, we expect the fastq files to already exist
