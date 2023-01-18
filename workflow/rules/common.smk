@@ -119,6 +119,11 @@ elif merge_without_demux:
         samples.append(re.split("_L[0-9]{3}", f)[0])
     lane_prefix = "_"
 
+    # extract the correct number of lanes
+    lanes = [re.search('_L[0-9]{3}_', f) for f in base]
+    lanes = [lane.group().strip('_') for lane in lanes if lane]
+    lanes = list(np.unique(lanes))
+
 else:
     # in this case, we expect the fastq files to already exist
     fastq_dir = config["fastq_dir"]
