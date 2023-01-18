@@ -132,6 +132,20 @@ else:
     for f in base:
         samples.append(f.split("_R1")[0])
 
+if len(samples) == 0:
+    print(
+        """
+        No samples could be found! Please check whether your input directory
+        (fastq_dir or merge_from_dir) is correct, and that your samples match
+        the input mask matches <fastq_dir>/*_R1.fastq.gz or
+        <merge_from_dir>/*_L001_R1_001.fastq.gz. If you are demultiplexing MGI
+        data, make sure your undemultiplexed files are of the format
+        <raw_input>/L0*/*_1.fq.gz.
+        """,
+        file=sys.stderr,
+    )
+    sys.exit()
+
 
 # ------------- input/output functions ------------
 
