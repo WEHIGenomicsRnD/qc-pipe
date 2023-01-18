@@ -1,5 +1,5 @@
 {
-    "SBATCH_DEFAULTS": "",
+    "SBATCH_DEFAULTS": "--output=logs/slurm-%A.out",
     "CLUSTER_NAME": "",
     "CLUSTER_CONFIG": "",
     "ADVANCED_ARGUMENT_CONVERSION": "no"
