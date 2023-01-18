@@ -25,8 +25,12 @@ rule fastqScreen:
         r2="fastq/{sample}_R2.fastq.gz",
         config_file=config["FastqScreen_config"],
     output:
-        r1="results/fastqScreen/{sample}_R1_screen.html",
-        r2="results/fastqScreen/{sample}_R2_screen.html",
+        r1_html="results/fastqScreen/{sample}_R1_screen.html",
+        r2_html="results/fastqScreen/{sample}_R2_screen.html",
+        r1_txt="results/fastqScreen/{sample}_R1_screen.txt",
+        r2_txt="results/fastqScreen/{sample}_R2_screen.txt",
+        r1_png="results/fastqScreen/{sample}_R1_screen.png",
+        r2_png="results/fastqScreen/{sample}_R2_screen.png",
     log:
         "logs/fastqScreen_{sample}.log",
     conda:
@@ -39,6 +43,7 @@ rule fastqScreen:
         """
         fastq_screen --conf {input.config_file} \
             --outdir results/fastqScreen \
+            --force \
             {input.r1} {input.r2}
         """
 
