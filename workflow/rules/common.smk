@@ -120,8 +120,8 @@ elif merge_without_demux:
     lane_prefix = "_"
 
     # extract the correct number of lanes
-    lanes = [re.search('_L[0-9]{3}_', f) for f in base]
-    lanes = [lane.group().strip('_') for lane in lanes if lane]
+    lanes = [re.search("_L[0-9]{3}_", f) for f in base]
+    lanes = [lane.group().strip("_") for lane in lanes if lane]
     lanes = list(np.unique(lanes))
 
 else:

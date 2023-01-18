@@ -131,7 +131,6 @@ if aligner != "none":
                 -o results/multiqc -f
             """
 
-
 else:
 
     rule multiQC:
