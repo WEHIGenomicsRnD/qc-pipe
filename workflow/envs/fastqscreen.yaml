@@ -3,3 +3,4 @@ channels:
   - bioconda
 dependencies:
   - fastq-screen =0.14.0
+  - bowtie2
