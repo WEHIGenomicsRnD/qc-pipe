@@ -49,7 +49,7 @@ if demultiplex:
         with open(config["sample_sheet"], "r") as ss:
             found_sample_info = False
             lines = ss.readlines()
-            sample_info_idx = np.where(np.array(lines) == "[BCLConvert_Data]\n")[0]
+            sample_info_idx = np.where([line.startswith("[BCLConvert_Data]") for line in lines])[0]
 
             if len(sample_info_idx) == 0:
                 print(

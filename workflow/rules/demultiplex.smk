@@ -91,6 +91,7 @@ if demultiplex:
                 fastq=expand(
                     "results/demultiplexed/{sample}{lane_prefix}{lane}_{readend}_001.fastq.gz",
                     sample=samples,
+                    lane_prefix=lane_prefix,
                     lane=lanes,
                     readend=READENDS,
                 ),
