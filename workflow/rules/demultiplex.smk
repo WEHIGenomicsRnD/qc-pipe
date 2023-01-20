@@ -30,7 +30,6 @@ if demultiplex:
                     {config[params][bcl2fastq]}
                 """
 
-
     elif demux_tool == "mgi_splitbarcode":
 
         rule splitbarcodes:
@@ -80,7 +79,6 @@ if demultiplex:
                     -n {threads} \
                     {params.extra}
                 """
-
 
     elif demux_tool == "bcl-convert":
 
@@ -137,7 +135,6 @@ if demux_tool in ["bcl2fastq", "bcl-convert"]:
             demux_dir=demux_dir,
         shell:
             "cat {params.demux_dir}/{wildcards.sample}*_{wildcards.readend}_001.fastq.gz > {output}"
-
 
 elif demux_tool == "mgi_splitbarcode":
 
