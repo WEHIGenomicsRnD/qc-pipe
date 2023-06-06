@@ -88,7 +88,8 @@ if demultiplex:
 
         # infer lanes
         lanes = iglob(f"{raw_input}/*")
-        lanes = [os.path.basename(lane) for lane in lanes]
+        lanes = [os.path.basename(lane) for lane in lanes if os.path.isdir(lane)]
+        lane_prefix = "_"
 
         # make sure this includes only lane names
         assert all([bool(re.match("L[0-9]{2}", lane)) for lane in lanes])
