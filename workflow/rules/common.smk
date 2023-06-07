@@ -31,7 +31,6 @@ if lanes:
 lane_prefix = ""  # comes before lane in file name
 
 if demultiplex:
-
     if demux_tool == "bcl2fastq":
         # process sample sheet for bcl2fastq
         from sample_sheet import SampleSheet
@@ -49,7 +48,9 @@ if demultiplex:
         with open(config["sample_sheet"], "r") as ss:
             found_sample_info = False
             lines = ss.readlines()
-            sample_info_idx = np.where([line.startswith("[BCLConvert_Data]") for line in lines])[0]
+            sample_info_idx = np.where(
+                [line.startswith("[BCLConvert_Data]") for line in lines]
+            )[0]
 
             if len(sample_info_idx) == 0:
                 print(
@@ -78,7 +79,6 @@ if demultiplex:
                 lanes = ["_L%s" % str(lane).zfill(3) for lane in range(1, lanes + 1)]
 
     elif demux_tool == "mgi_splitbarcode":
-
         raw_input = config["raw_input"]
         fqs = iglob(f"{raw_input}/*/*_1.fq.gz")
 
