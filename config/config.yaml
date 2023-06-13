@@ -52,7 +52,7 @@ params:
         # split params for barcode 2: read len, barcode len, number of mismatches
         bs2: "310 10 1"
         # extra parameters (-r = reverse complement barcode)
-        extra: -r -m 64
+        extra: -r -m 64 --umi
 
 # bwa or star (leave blank to skip alignment-based QC)
 aligner: bwa
