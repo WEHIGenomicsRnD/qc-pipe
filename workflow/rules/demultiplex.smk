@@ -1,5 +1,4 @@
 if demultiplex:
-
     if demux_tool == "bcl2fastq":
 
         rule bcl2fastq:
@@ -161,8 +160,8 @@ elif demux_tool == "mgi_splitbarcode":
             demux_dir=demux_dir,
             sample_prefix=sample_prefix,
             readend=lambda w: w.readend.split("R")[-1],
-            sample_num=lambda w: w.sample.split("_")[-1],
+            sample_id=lambda w: "_".join(w.sample.split("_")[1:]),
         shell:
             """
-            cat {params.demux_dir}/*/{params.sample_prefix}_*_{params.sample_num}_{params.readend}.fq.gz > {output}
+            cat {params.demux_dir}/*/{params.sample_prefix}_*_{params.sample_id}_{params.readend}.fq.gz > {output}
             """
